@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  app:
+    image: chenzhaoyu94/chatgpt-web # 总是使用 latest ,更新时重新 pull 该 tag 镜像即可
+    ports:
+      - 80:3002 # 80可以改成你喜欢的也行
+    environment:  
+        # OPENAI_API_KEY和OPENAI_ACCESS_TOKEN 用其中一个就就行
+        
+        # OPENAI_API_KEY: sk-xxx # 开头的
+        
+        # 登录chatgpt,在浏览器输入https://chat.openai.com/api/auth/session，就能获取到OPENAI_ACCESS_TOKEN，很长的一段，你没有看错
+        
+        # OPENAI_ACCESS_TOKEN: 
+        
+        TIMEOUT_MS: 60000
+        
+        # web页面的验证码
+        AUTH_SECRET_KEY: 
