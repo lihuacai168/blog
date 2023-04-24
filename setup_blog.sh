@@ -1,15 +1,34 @@
 #!/bin/bash
 
+#!/bin/bash
+
 BLOG_DIR="$HOME/myblog"
 
 if [ ! -d "$BLOG_DIR" ]; then
-  mkdir "$BLOG_DIR"
-  echo "文件夹 $BLOG_DIR 创建成功！"
+    mkdir -p "$BLOG_DIR"
+    echo "目录 $BLOG_DIR 已创建。"
 else
-  echo "文件夹 $BLOG_DIR 已存在！"
+    echo "目录 $BLOG_DIR 已存在。"
+
+    while true; do
+        read -p "请输入新的目录名称，默认是在当前用户下目录，需要写名称，不要写完整路径" new_dir_name
+        NEW_BLOG_DIR="$HOME/$new_dir_name"
+
+        if [ ! -d "$NEW_BLOG_DIR" ]; then
+            mkdir -p "$NEW_BLOG_DIR"
+            echo "新的目录 $NEW_BLOG_DIR 已创建。"
+            break
+        else
+            echo "目录 $NEW_BLOG_DIR 已存在，请输入另一个名称。"
+        fi
+    done
+
+    BLOG_DIR="$NEW_BLOG_DIR"
 fi
 
 cd "$BLOG_DIR"
+echo "已进入目录 $BLOG_DIR。"
+
 
 read -p "请输入您的邮箱： " USER_EMAIL
 
@@ -46,11 +65,24 @@ EOL
 
 echo "docker-compose.yml 文件创建成功！"
 
-docker-compose up -d
+# Wait for the service to be accessible
+CHECK_URL="http://localhost:1180"
+CHECK_STATUS=0
+TIMEOUT=60
+TIME_PASSED=0
 
-PUBLIC_IP=$(curl -s ifconfig.me)
+echo "正在检查服务是否可以访问，请稍候..."
 
-sleep 5
+while [ $TIME_PASSED -lt $TIMEOUT ]; do
+  curl -s -o /dev/null -w "%{http_code}" $CHECK_URL | grep -q "200" && CHECK_STATUS=1 && break
+  sleep 3
+  TIME_PASSED=$((TIME_PASSED+5))
+done
 
-echo "博客已启动！请访问：http://${PUBLIC_IP}:1180"
+if [ $CHECK_STATUS -eq 1 ]; then
+  PUBLIC_IP=$(curl -s ifconfig.me)
+  echo "博客已启动！请访问：http://${PUBLIC_IP}:1180"
+else
+  echo "博客启动超时，请手动检查服务状态。"
+fi
 
