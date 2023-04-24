@@ -30,7 +30,6 @@ cd "$BLOG_DIR"
 echo "已进入目录 $BLOG_DIR。"
 
 
-read -p "请输入您的邮箱： " USER_EMAIL
 
 DOCKER_COMPOSE_FILE="docker-compose.yml"
 
@@ -43,7 +42,7 @@ services:
     restart: always
     environment:
       TZ: "Asia/Shanghai"
-      EMAIL: "$USER_EMAIL"
+      EMAIL: ""
     volumes:
       - \${PWD}/data/static:/app/static
       - \${PWD}/log:/var/log
