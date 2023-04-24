@@ -79,7 +79,7 @@ echo "正在检查服务是否可以访问，请稍候..."
 while [ $TIME_PASSED -lt $TIMEOUT ]; do
   curl -s -o /dev/null -w "%{http_code}" $CHECK_URL | grep -q "200" && CHECK_STATUS=1 && break
   sleep 1
-  TIME_PASSED=$((TIME_PASSED+5))
+  TIME_PASSED=$((TIME_PASSED+1))
 done
 
 if [ $CHECK_STATUS -eq 1 ]; then
