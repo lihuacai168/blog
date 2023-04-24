@@ -65,6 +65,10 @@ EOL
 
 echo "docker-compose.yml 文件创建成功！"
 
+docker-compose up -d
+
+echo "服务开始启动..."
+
 # Wait for the service to be accessible
 CHECK_URL="http://localhost:1180"
 CHECK_STATUS=0
@@ -75,7 +79,7 @@ echo "正在检查服务是否可以访问，请稍候..."
 
 while [ $TIME_PASSED -lt $TIMEOUT ]; do
   curl -s -o /dev/null -w "%{http_code}" $CHECK_URL | grep -q "200" && CHECK_STATUS=1 && break
-  sleep 3
+  sleep 1
   TIME_PASSED=$((TIME_PASSED+5))
 done
 
